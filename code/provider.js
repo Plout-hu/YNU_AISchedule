@@ -5,7 +5,7 @@ async function scheduleHtmlProvider(iframeContent = "", frameContent = "", dom =
   const xswpkc = 'https://ehall.ynu.edu.cn/jwapp/sys/wdkb/modules/xskcb/xswpkc.do'//查询未安排时间的课程请求路径
   const userConfrim = await AIScheduleConfirm({
     titleText: "提示", // 标题内容，字体比较大，超过10个字不给显示的喔，也可以不传就不显示
-    contentText: "请在登录后进入可用应用-本科教务-我的课表-学生组后(即看到自己的课表后)再点击导入(由于我没有研究生账号，不知道研究生能不能用)", // 提示信息，字体稍小，支持使用``达到换行效果，具体使用效果建议真机测试，为必传，不传显示版本号
+    contentText: "请在登录后进入可用应用-本科教务-我的课表-学生组后(即看到自己的课表后)再点击导入(因为我没有研究生账号，不知道研究生能不能用)", // 提示信息，字体稍小，支持使用``达到换行效果，具体使用效果建议真机测试，为必传，不传显示版本号
     cancelText: "我还未看到我的课表", // 取消按钮文字，可不传默认为取消
     confirmText: "我已经看到我的课表", // 确认按钮文字，可不传默认为确认
   })
@@ -30,7 +30,6 @@ async function scheduleHtmlProvider(iframeContent = "", frameContent = "", dom =
       return 'do not continue'
     }
     try {
-
       let searchParams = new URLSearchParams()//请求参数
       searchParams.append('XNXQDM', XNXQDM)//请求参数：学年学期
       //获取已经安排时间的课程
@@ -39,12 +38,12 @@ async function scheduleHtmlProvider(iframeContent = "", frameContent = "", dom =
         body: searchParams
       }).then(response => response.json())
         .then((data) => {
-          /* for (let j = 0; j < data.datas.xskcb.rows.length; j++) {
+          for (let j = 0; j < data.datas.xskcb.rows.length; j++) {
             if (scheduledCourses.find(item => item.KCH === data.datas.xskcb.rows[j].KCH) === undefined) {
               scheduledCourses.push(data.datas.xskcb.rows[j])
             }
-          } */
-          scheduledCourses=data.datas.xskcb.rows
+          }
+          // scheduledCourses=data.datas.xskcb.rows
           // console.log(scheduledCourses)
         })
       //获取未安排时间的课程
@@ -53,12 +52,12 @@ async function scheduleHtmlProvider(iframeContent = "", frameContent = "", dom =
         body: searchParams
       }).then(response => response.json())
         .then((data) => {
-          // for (let j = 0; j < data.datas.xswpkc.rows.length; j++) {
-          //   if (unscheduledCourses.find(item => item.JXBID === data.datas.xswpkc.rows[j].JXBID) === undefined) {
-          //     unscheduledCourses.push(data.datas.xswpkc.rows[j])
-          //   }
-          // }
-          unscheduledCourses=data.datas.xswpkc.rows
+          for (let j = 0; j < data.datas.xswpkc.rows.length; j++) {
+            if (unscheduledCourses.find(item => item.JXBID === data.datas.xswpkc.rows[j].JXBID) === undefined) {
+              unscheduledCourses.push(data.datas.xswpkc.rows[j])
+            }
+          }
+          // unscheduledCourses=data.datas.xswpkc.rows
         })
 
       console.log("已经安排时间的课程")
@@ -84,5 +83,4 @@ async function scheduleHtmlProvider(iframeContent = "", frameContent = "", dom =
   } else {
     return 'do not continue'//取消
   }
-
 }
